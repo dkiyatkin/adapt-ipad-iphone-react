@@ -55,3 +55,8 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.react-draggable-dragging {
+  z-index: 1;
+  position: relative;
+}

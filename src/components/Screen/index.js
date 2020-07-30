@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
+import Workspace from 'components/Workspace'
 
 import bgImg from 'images/background.jpg'
 import styles from './index.module.scss'
@@ -13,7 +14,7 @@ export default function Screen (props) {
         backgroundImage: `url(${bgImg})`,
       }}
     >
-      123
+      <Workspace className={styles.workspace} />
     </div>
   )
 }

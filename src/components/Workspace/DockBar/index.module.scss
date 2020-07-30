@@ -1,0 +1,13 @@
+.dockBar {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.3);
+  min-height: 35px;
+  height: 20%;
+  font-size: 11px;
+
+  .cell {
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+  }
+}
