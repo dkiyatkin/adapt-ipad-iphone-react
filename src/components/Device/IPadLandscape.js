@@ -25,7 +25,13 @@ export default function IPadLandscape (props) {
   useEffect(() => {
     rootContext.setDevice('IPad')
     rootContext.setOrientation('landscape')
-    rootContext.setWorkspace({ ...rootContext.workspace, screenWidth, screenHeight })
+    rootContext.setWorkspace({
+      ...rootContext.workspace,
+      screenWidth,
+      screenHeight,
+      colMax: 5,
+      rowMax: 4,
+    })
   }, []) // eslint-disable-line
 
   return (

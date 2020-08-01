@@ -25,7 +25,13 @@ export default function IPadPortrait (props) {
   useEffect(() => {
     rootContext.setDevice('IPad')
     rootContext.setOrientation('portrait')
-    rootContext.setWorkspace({ ...rootContext.workspace, screenWidth, screenHeight })
+    rootContext.setWorkspace({
+      ...rootContext.workspace,
+      screenWidth,
+      screenHeight,
+      colMax: 4,
+      rowMax: 5,
+    })
   }, []) // eslint-disable-line
 
   return (

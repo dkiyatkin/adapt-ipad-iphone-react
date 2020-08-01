@@ -4,13 +4,38 @@ import cn from 'classnames'
 
 import styles from './index.module.scss'
 
-export default function PageIndicator (props) {
-  return (
-    <div className={cn(styles.pageIndicator, props.className)}>
-      dots
-    </div>
-  )
-}
-PageIndicator.propTypes = {
-  className: PropTypes.string,
+export default class PageIndicator extends React.Component {
+  static propTypes = {
+    className: PropTypes.string,
+    curDesktopIndex: PropTypes.number,
+    desktopsCount: PropTypes.number,
+    setDesktop: PropTypes.func,
+  }
+
+  handleClick = (desktopIndex) => {
+    const { setDesktop } = this.props
+    setDesktop(desktopIndex)
+  }
+
+  render () {
+    const { curDesktopIndex, desktopsCount } = this.props
+
+    return (
+      <div className={cn(styles.pageIndicator, this.props.className)}>
+        {
+          [...Array(desktopsCount)].map((desktopItem, desktopIndex) => {
+            return (
+              <button
+                key={desktopIndex}
+                className={cn(styles.btn, { [styles.btnSel]: curDesktopIndex === desktopIndex })}
+                onClick={this.handleClick.bind(this, desktopIndex)}
+              >
+                <span className={styles.bull} />
+              </button>
+            )
+          })
+        }
+      </div>
+    )
+  }
 }

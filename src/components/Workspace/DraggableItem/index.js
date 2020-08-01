@@ -9,50 +9,48 @@ export default class DraggableItem extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     item: PropTypes.string,
-    col: PropTypes.number,
-    colMax: PropTypes.number,
-    stepX: PropTypes.number,
-    setPositions: PropTypes.func,
+    axis: PropTypes.string,
+    onDrag: PropTypes.func,
+    onStop: PropTypes.func,
   }
 
   constructor (props) {
     super(props)
-    this.myRef = React.createRef()
+    this.mainRef = React.createRef()
     this.state = {
-      controlledPosition: {
-        x: 0, y: 0
-      }
+      controlledPosition: { x: 0, y: 0 },
+      isHide: false,
     }
   }
 
-  handleStop = (e, data) => {
-    const { col, colMax, stepX, setPositions } = this.props
-    // console.log('Event: ', e)
-    // console.log('Data: ', data)
-    // console.log(stepX, data.x, data.y)
-    const parentX = data.x + (col * stepX)
-    const curCol = Math.round(parentX / stepX)
-    // console.log('col, curCol', col, curCol)
-    if (curCol === col || curCol > colMax || curCol < 1) {
-      this.setState({ controlledPosition: { x: 0, y: 0 } })
-    } else {
-      // this.setState({ controlledPosition: { x: data.x, y: 0 } })
-      setPositions(col, curCol)
-    }
+  componentDidMount () {
+    this.isMount = true
+  }
+
+  componentWillUnmount () {
+    this.isMount = false
   }
 
   render () {
-    const { item } = this.props
+    const { item, axis, onDrag: handleDrag, onStop: handleStop } = this.props
+    const { controlledPosition, isHide } = this.state
     const iconImg = require(`images/icons/${item}`)
 
     return (
       <Draggable
-        nodeRef={this.myRef}
-        onStop={this.handleStop}
-        position={this.state.controlledPosition}
-        offsetParent={document.body}
+        nodeRef={this.mainRef}
+        position={controlledPosition}
+        axis={axis}
+        onDrag={handleDrag}
+        onStop={(...args) => {
+          this.setState({ isHide: true })
+          process.nextTick(() => {
+            handleStop(...args)
+            if (this.isMount) this.setState({ isHide: false })
+          })
+        }}
       >
-        <div className={cn(styles.draggableItem, this.props.className)} ref={this.myRef}>
+        <div className={cn(styles.draggableItem, { 'd-none': isHide }, this.props.className)} ref={this.mainRef}>
           <div className={styles.imgWrap}>
             <img src={iconImg} alt={item} />
           </div>

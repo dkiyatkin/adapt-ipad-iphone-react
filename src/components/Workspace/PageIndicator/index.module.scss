@@ -1,0 +1,37 @@
+.pageIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .btn {
+    position: relative;
+    outline: none;
+    border: 0;
+    background-color: transparent;
+    padding: 0;
+    margin: 0 10px;
+    height: 20px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:active {
+      top: 1px;
+      left: 1px;
+    }
+
+    .bull {
+      width: 40%;
+      height: 40%;
+      background-color: #fff;
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+  }
+  .btnSel {
+    .bull {
+      opacity: 1;
+    }
+  }
+}

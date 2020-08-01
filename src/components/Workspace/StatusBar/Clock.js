@@ -32,9 +32,11 @@ export default class Clock extends React.Component {
   }
 
   render () {
+    const { time } = this.state
+
     return (
       <div className={cn(styles.clock, this.props.className)}>
-        {this.state.time}
+        {time}
       </div>
     )
   }

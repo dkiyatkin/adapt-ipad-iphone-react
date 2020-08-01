@@ -1,79 +1,66 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
-import RootContext from 'components/RootContext'
 import DraggableItem from 'components/Workspace/DraggableItem'
 
-import config from 'config.json'
 import styles from './index.module.scss'
 
 export default class DockBar extends React.Component {
   static propTypes = {
     className: PropTypes.string,
+    items: PropTypes.array,
+    setDockBarItems: PropTypes.func,
   }
 
-  static contextType = RootContext
-
-  setDockBarIcons = (items) => {
-    // TODO localStorage
-    this.setState({
-      items
-    })
-  }
-
-  getDockBarIcons = () => {
-    // TODO localStorage
-    const isPortrait = (this.context.orientation === 'portrait')
-    let items = []
-    if (isPortrait) {
-      items = [...config.dockBarIcons].slice(0, 4)
-    } else {
-      items = [...config.dockBarIcons].slice(0, 5)
-    }
-    return items
-  }
-
-  constructor (props, context) {
-    super(props, context)
+  constructor (props) {
+    super(props)
+    this.mainRef = React.createRef()
     this.state = {
-      items: this.getDockBarIcons(),
+      width: 0,
+      height: 0,
     }
   }
 
   componentDidMount () {
-    this.previousContext = this.context
+    const mainElement = this.mainRef.current
+    if (!mainElement) return
+    const width = mainElement.clientWidth
+    const height = mainElement.clientHeight
+    this.setState({ width, height })
   }
 
-  componentDidUpdate (prevProps) {
-    if (this.previousContext.orientation !== this.context.orientation) {
-      this.setDockBarIcons(this.getDockBarIcons())
-    }
-    this.previousContext = this.context
+  setPositions = (col, selCol) => {
+    const { setDockBarItems } = this.props
+    const items = [...this.props.items]
+    items[col - 1] = items.splice(selCol - 1, 1, items[col - 1])[0]
+    setDockBarItems(items)
   }
 
-  setPositions = (col, curCol) => {
-    const items = [...this.state.items]
-    items[col - 1] = items.splice(curCol - 1, 1, items[col - 1])[0]
-    this.setDockBarIcons(items)
+  handleStop = (itemIndex, event, data) => {
+    const { items } = this.props
+    const { width } = this.state
+    const col = itemIndex + 1
+    const colMax = items.length
+    const stepX = width / colMax
+    const parentX = data.x + (col * stepX)
+    const selCol = Math.round(parentX / stepX)
+    if (selCol === col || selCol > colMax || selCol < 1) return
+    this.setPositions(col, selCol)
   }
 
   render () {
-    const width = this.context.workspace.screenWidth
-    const colMax = this.state.items.length
-    const stepX = width / colMax
+    const { items } = this.props
 
     return (
-      <div className={cn(styles.dockBar, this.props.className)}>
+      <div className={cn(styles.dockBar, this.props.className)} ref={this.mainRef}>
         {
-          this.state.items.map((item, i) => {
+          items.map((item, i) => {
             return (
               <div key={item} className={styles.cell}>
                 <DraggableItem
                   item={item}
-                  col={i + 1}
-                  colMax={colMax}
-                  stepX={stepX}
-                  setPositions={this.setPositions}
+                  axis='x'
+                  onStop={this.handleStop.bind(this, i)}
                 />
               </div>
             )
