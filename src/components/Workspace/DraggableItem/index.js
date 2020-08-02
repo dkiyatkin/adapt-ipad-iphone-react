@@ -35,6 +35,7 @@ export default class DraggableItem extends React.Component {
     const { item, axis, onDrag: handleDrag, onStop: handleStop } = this.props
     const { controlledPosition, isHide } = this.state
     const iconImg = require(`images/icons/${item}`)
+    const itemTitle = item.slice(0, -4)
 
     return (
       <Draggable
@@ -50,12 +51,16 @@ export default class DraggableItem extends React.Component {
           })
         }}
       >
-        <div className={cn(styles.draggableItem, { 'd-none': isHide }, this.props.className)} ref={this.mainRef}>
+        <div
+          className={cn(styles.draggableItem, { 'd-none': isHide }, this.props.className)}
+          ref={this.mainRef}
+          title={itemTitle}
+        >
           <div className={styles.imgWrap}>
             <img src={iconImg} alt={item} />
           </div>
           <div className={styles.textWrap}>
-            {item.slice(0, -4)}
+            {itemTitle}
           </div>
         </div>
       </Draggable>
