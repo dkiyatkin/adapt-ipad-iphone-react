@@ -10,6 +10,7 @@ export default class DraggableItem extends React.Component {
     className: PropTypes.string,
     item: PropTypes.string,
     axis: PropTypes.string,
+    onStart: PropTypes.func,
     onDrag: PropTypes.func,
     onStop: PropTypes.func,
   }
@@ -32,7 +33,7 @@ export default class DraggableItem extends React.Component {
   }
 
   render () {
-    const { item, axis, onDrag: handleDrag, onStop: handleStop } = this.props
+    const { item, axis, onStart: handleStart, onDrag: handleDrag, onStop: handleStop } = this.props
     const { controlledPosition, isHide } = this.state
     const iconImg = require(`images/icons/${item}`)
     const itemTitle = item.slice(0, -4)
@@ -42,6 +43,7 @@ export default class DraggableItem extends React.Component {
         nodeRef={this.mainRef}
         position={controlledPosition}
         axis={axis}
+        onStart={handleStart}
         onDrag={handleDrag}
         onStop={(...args) => {
           this.setState({ isHide: true })

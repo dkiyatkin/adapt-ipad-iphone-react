@@ -22,6 +22,7 @@ export default class DesktopGrid extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      isDrag: false,
       width: 0,
       height: 0,
     }
@@ -41,11 +42,11 @@ export default class DesktopGrid extends React.Component {
     return (col - 1) + ((row - 1) * colMax) + (desktopIndex * desktopItemsCount)
   }
 
-  setPositions = (itemIndex, selCellIndex) => {
+  setPositions = (itemIndex, selCellIndex, selDesktopIndex) => {
     const { setDesktopGridItems } = this.props
     const items = [...this.props.items]
     items[itemIndex] = items.splice(selCellIndex, 1, items[itemIndex])[0]
-    setDesktopGridItems(items)
+    setDesktopGridItems(items, selDesktopIndex)
   }
 
   getColByItemIndex = (itemIndex) => {
@@ -66,8 +67,14 @@ export default class DesktopGrid extends React.Component {
     return Math.ceil(absCol / colMax) - 1
   }
 
+  handleStart = (desktopIndex, itemIndex, event, data) => {
+    this.setState({ isDrag: true })
+  }
+
   handleDrag = (desktopIndex, itemIndex, event, data) => {
     const { desktopsCount, setDesktop } = this.props
+    const { isDrag } = this.state
+    if (!isDrag) return
     const col = this.getColByItemIndex(itemIndex)
     const selAbsCol = this.getAbsCol(desktopIndex, data, col)
     const selDesktopIndex = this.getDesktopIndexByAbsCol(selAbsCol)
@@ -76,6 +83,7 @@ export default class DesktopGrid extends React.Component {
   }
 
   handleStop = (desktopIndex, itemIndex, event, data) => {
+    this.setState({ isDrag: false })
     const { desktopsCount, desktopItemsCount, colMax, rowMax } = this.props
     const { height } = this.state
     const col = this.getColByItemIndex(itemIndex)
@@ -88,7 +96,7 @@ export default class DesktopGrid extends React.Component {
     if (selAbsRow > rowMax) return
     const selCol = selAbsCol - (selDesktopIndex * colMax)
     if ((desktopIndex === selDesktopIndex) && (col === selCol) && (absRow === selAbsRow)) return
-    this.setPositions(itemIndex, this.getItemIndex(selDesktopIndex, selCol, selAbsRow))
+    this.setPositions(itemIndex, this.getItemIndex(selDesktopIndex, selCol, selAbsRow), selDesktopIndex)
   }
 
   render () {
@@ -119,6 +127,7 @@ export default class DesktopGrid extends React.Component {
                       <div key={item} className={styles.cell} style={cellStyle}>
                         <DraggableItem
                           item={item}
+                          onStart={this.handleStart}
                           onDrag={debounce(this.handleDrag.bind(this, desktopIndex, itemIndex), 50)}
                           onStop={this.handleStop.bind(this, desktopIndex, itemIndex)}
                         />
