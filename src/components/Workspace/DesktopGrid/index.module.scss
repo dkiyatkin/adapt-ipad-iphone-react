@@ -17,3 +17,11 @@
     min-width: 0;
   }
 }
+
+.desktopGrid {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.desktopGrid::-webkit-scrollbar {
+  display: none;
+}

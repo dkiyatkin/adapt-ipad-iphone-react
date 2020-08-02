@@ -2,16 +2,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 5px 0;
 
   .btn {
     position: relative;
     outline: none;
     border: 0;
     background-color: transparent;
-    padding: 0;
-    margin: 0 10px;
+    padding: 0 5px;
     height: 20px;
-    width: 20px;
+    width: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
