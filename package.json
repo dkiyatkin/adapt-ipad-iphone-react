@@ -29,6 +29,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "author": "Dmitriy Kiyatkin <info@dkiyatkin.com> (http://dkiyatkin.com)",
   "eslintConfig": {
     "extends": "react-app"
   },
