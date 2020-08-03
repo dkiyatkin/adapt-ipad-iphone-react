@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import cn from 'classnames'
 import DraggableItem from 'components/Workspace/DraggableItem'
 
-import styles from './index.module.scss'
+import styles from './DockBar.module.scss'
 
 export default class DockBar extends React.Component {
   static propTypes = {

@@ -4,7 +4,7 @@ import cn from 'classnames'
 import DraggableItem from 'components/Workspace/DraggableItem'
 import debounce from 'lodash.debounce'
 
-import styles from './index.module.scss'
+import styles from './DesktopGrid.module.scss'
 
 export default class DesktopGrid extends React.Component {
   static propTypes = {

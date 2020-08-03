@@ -4,7 +4,7 @@ import cn from 'classnames'
 import Draggable from 'react-draggable'
 import getItemValues from 'helpers/getItemValues'
 
-import styles from './index.module.scss'
+import styles from './DraggableItem.module.scss'
 
 export default class DraggableItem extends React.Component {
   static propTypes = {

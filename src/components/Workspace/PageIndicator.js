@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
 
-import styles from './index.module.scss'
+import styles from './PageIndicator.module.scss'
 
 export default class PageIndicator extends React.Component {
   static propTypes = {
