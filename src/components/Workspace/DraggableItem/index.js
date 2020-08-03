@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
 import Draggable from 'react-draggable'
+import getItemValues from 'helpers/getItemValues'
 
 import styles from './index.module.scss'
 
@@ -13,6 +14,7 @@ export default class DraggableItem extends React.Component {
     onStart: PropTypes.func,
     onDrag: PropTypes.func,
     onStop: PropTypes.func,
+    onClick: PropTypes.func,
   }
 
   constructor (props) {
@@ -21,6 +23,7 @@ export default class DraggableItem extends React.Component {
     this.state = {
       controlledPosition: { x: 0, y: 0 },
       isHide: false,
+      isDrag: false,
     }
   }
 
@@ -32,11 +35,27 @@ export default class DraggableItem extends React.Component {
     this.isMount = false
   }
 
+  handleDrag = (...args) => {
+    const { onDrag } = this.props
+    this.setState({ isDrag: true })
+    if (onDrag) onDrag(...args)
+  }
+
+  handleStop = (...args) => {
+    const { onStop, onClick } = this.props
+    const { isDrag } = this.state
+    this.setState({ isDrag: false })
+    if (isDrag) {
+      if (onStop) onStop(...args)
+    } else {
+      if (onClick) onClick(...args)
+    }
+  }
+
   render () {
-    const { item, axis, onStart: handleStart, onDrag: handleDrag, onStop: handleStop } = this.props
+    const { item, axis, onStart: handleStart } = this.props
     const { controlledPosition, isHide } = this.state
-    const iconImg = require(`images/icons/${item}`)
-    const itemTitle = item.slice(0, -4)
+    const { itemTitle, iconImg } = getItemValues(item)
 
     return (
       <Draggable
@@ -44,11 +63,11 @@ export default class DraggableItem extends React.Component {
         position={controlledPosition}
         axis={axis}
         onStart={handleStart}
-        onDrag={handleDrag}
+        onDrag={this.handleDrag}
         onStop={(...args) => {
           this.setState({ isHide: true })
           process.nextTick(() => {
-            handleStop(...args)
+            this.handleStop(...args)
             if (this.isMount) this.setState({ isHide: false })
           })
         }}

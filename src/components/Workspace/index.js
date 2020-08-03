@@ -9,6 +9,7 @@ import StatusBar from 'components/Workspace/StatusBar'
 import DesktopGrid from 'components/Workspace/DesktopGrid'
 import PageIndicator from 'components/Workspace/PageIndicator'
 import DockBar from 'components/Workspace/DockBar'
+import RunApp from 'components/Workspace/RunApp'
 
 import config from 'config.json'
 import styles from './index.module.scss'
@@ -26,6 +27,7 @@ export default class Workspace extends React.Component {
     this.state = {
       dockBarItems: this.getDockBarItems(),
       curDesktopIndex: 0,
+      runAppItem: null,
     }
     this.state.desktopGridItems = this.getDesktopGridItems()
   }
@@ -125,9 +127,21 @@ export default class Workspace extends React.Component {
     return configDockBarItems
   }
 
+  handleStartApp = (item) => {
+    this.setState({
+      runAppItem: item
+    })
+  }
+
+  handleStopApp = () => {
+    this.setState({
+      runAppItem: null
+    })
+  }
+
   render () {
     const { colMax, rowMax } = this.context.workspace
-    const { desktopGridItems, curDesktopIndex, dockBarItems } = this.state
+    const { desktopGridItems, curDesktopIndex, dockBarItems, runAppItem } = this.state
     const desktopItemsCount = colMax * rowMax
     const desktopsCount = desktopGridItems.length / desktopItemsCount
 
@@ -144,6 +158,7 @@ export default class Workspace extends React.Component {
           rowMax={rowMax}
           setDesktop={this.setDesktop}
           setDesktopGridItems={this.setDesktopGridItems}
+          onStartApp={this.handleStartApp}
         />
         <PageIndicator
           className={styles.pageIndicator}
@@ -155,7 +170,16 @@ export default class Workspace extends React.Component {
           className={styles.dockBar}
           items={dockBarItems}
           setDockBarItems={this.setDockBarItems}
+          onStartApp={this.handleStartApp}
         />
+        {
+          runAppItem && (
+            <RunApp
+              item={runAppItem}
+              onStopApp={this.handleStopApp}
+            />
+          )
+        }
       </div>
     )
   }

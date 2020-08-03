@@ -10,6 +10,7 @@ export default class DockBar extends React.Component {
     className: PropTypes.string,
     items: PropTypes.array,
     setDockBarItems: PropTypes.func,
+    onStartApp: PropTypes.func,
   }
 
   constructor (props) {
@@ -49,7 +50,7 @@ export default class DockBar extends React.Component {
   }
 
   render () {
-    const { items } = this.props
+    const { items, onStartApp } = this.props
 
     return (
       <div className={cn(styles.dockBar, this.props.className)} ref={this.mainRef}>
@@ -61,6 +62,7 @@ export default class DockBar extends React.Component {
                   item={item}
                   axis='x'
                   onStop={this.handleStop.bind(this, i)}
+                  onClick={() => onStartApp(item)}
                 />
               </div>
             )

@@ -17,6 +17,7 @@ export default class DesktopGrid extends React.Component {
     rowMax: PropTypes.number,
     setDesktop: PropTypes.func,
     setDesktopGridItems: PropTypes.func,
+    onStartApp: PropTypes.func,
   }
 
   constructor (props) {
@@ -83,9 +84,9 @@ export default class DesktopGrid extends React.Component {
   }
 
   handleStop = (desktopIndex, itemIndex, event, data) => {
-    this.setState({ isDrag: false })
     const { desktopsCount, desktopItemsCount, colMax, rowMax } = this.props
     const { height } = this.state
+    this.setState({ isDrag: false })
     const col = this.getColByItemIndex(itemIndex)
     const selAbsCol = this.getAbsCol(desktopIndex, data, col)
     const selDesktopIndex = this.getDesktopIndexByAbsCol(selAbsCol)
@@ -100,7 +101,7 @@ export default class DesktopGrid extends React.Component {
   }
 
   render () {
-    const { desktopGridRef, desktopsCount, desktopItemsCount, items, colMax, rowMax } = this.props
+    const { desktopGridRef, desktopsCount, desktopItemsCount, items, colMax, rowMax, onStartApp } = this.props
     const cellStyle = {
       width: (100 / colMax) + '%',
       height: (100 / rowMax) + '%',
@@ -130,6 +131,7 @@ export default class DesktopGrid extends React.Component {
                           onStart={this.handleStart}
                           onDrag={debounce(this.handleDrag.bind(this, desktopIndex, itemIndex), 50)}
                           onStop={this.handleStop.bind(this, desktopIndex, itemIndex)}
+                          onClick={() => onStartApp(item)}
                         />
                       </div>
                     )
