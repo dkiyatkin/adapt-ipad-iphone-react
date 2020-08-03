@@ -1,6 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
+import compact from 'lodash.compact'
+import isEqual from 'lodash.isequal'
+import uniq from 'lodash.uniq'
 import RootContext from 'components/RootContext'
 import StatusBar from 'components/Workspace/StatusBar'
 import DesktopGrid from 'components/Workspace/DesktopGrid'
@@ -90,32 +93,36 @@ export default class Workspace extends React.Component {
   }
 
   setDesktopGridItems = (desktopGridItems, selDesktopIndex) => {
-    // TODO localStorage
     desktopGridItems = this.setEmptyDesktops(desktopGridItems, selDesktopIndex)
+    localStorage.setItem(`${this.context.device}_${this.context.orientation}_desktopGridItems`, JSON.stringify(desktopGridItems))
     this.setState({
       desktopGridItems
     })
   }
 
   getDesktopGridItems = () => {
-    // TODO localStorage
     const { colMax, rowMax } = this.context.workspace
+    const deviceDesktopGridItems = JSON.parse(localStorage.getItem(`${this.context.device}_${this.context.orientation}_desktopGridItems`)) || []
+    const configDesktopGridItems = uniq(config.desktopGridIcons)
+    if (isEqual(compact(deviceDesktopGridItems).sort(), compact(configDesktopGridItems).sort())) return deviceDesktopGridItems
     const desktopItemsCount = colMax * rowMax
-    const emptyCellsNum = desktopItemsCount - (config.desktopGridIcons.length % desktopItemsCount)
-    return this.setEmptyDesktops([...config.desktopGridIcons, ...Array(emptyCellsNum)])
+    const emptyCellsNum = desktopItemsCount - (configDesktopGridItems.length % desktopItemsCount)
+    return this.setEmptyDesktops([...configDesktopGridItems, ...Array(emptyCellsNum)])
   }
 
   setDockBarItems = (dockBarItems) => {
-    // TODO localStorage
+    localStorage.setItem(`${this.context.device}_${this.context.orientation}_dockBarItems`, JSON.stringify(dockBarItems))
     this.setState({
       dockBarItems
     })
   }
 
   getDockBarItems = () => {
-    // TODO localStorage
-    const colMax = this.context.workspace.colMax
-    return [...config.dockBarIcons].slice(0, colMax)
+    const { colMax } = this.context.workspace
+    const deviceDockBarItems = JSON.parse(localStorage.getItem(`${this.context.device}_${this.context.orientation}_dockBarItems`)) || []
+    const configDockBarItems = uniq(config.dockBarIcons).slice(0, colMax)
+    if (isEqual(compact(deviceDockBarItems).sort(), compact(configDockBarItems).sort())) return deviceDockBarItems
+    return configDockBarItems
   }
 
   render () {
