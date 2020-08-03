@@ -94,7 +94,7 @@ export default class DesktopGrid extends React.Component {
     const absRow = Math.ceil(((itemIndex + 1) % desktopItemsCount) / colMax) || rowMax
     const stepY = height / rowMax
     const selAbsRow = Math.round((data.y + (absRow * stepY)) / stepY)
-    if (selAbsRow > rowMax) return
+    if ((selAbsRow > rowMax) || (selAbsRow < 1)) return
     const selCol = selAbsCol - (selDesktopIndex * colMax)
     if ((desktopIndex === selDesktopIndex) && (col === selCol) && (absRow === selAbsRow)) return
     this.setPositions(itemIndex, this.getItemIndex(selDesktopIndex, selCol, selAbsRow), selDesktopIndex)
