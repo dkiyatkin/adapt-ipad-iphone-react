@@ -1,68 +1,67 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Тестовое задание ReactJS Developer
 
-## Available Scripts
+Тестовое задание. Разработка интерактивного IPad / IPhone. Адаптация сторон девайса в зависимости от разрешения экрана с использованием фреймворка ReactJS.
 
-In the project directory, you can run:
+Тестовое задание содержит:
 
-### `yarn start`
+1. Папку с изображениями устройств и иконками.
+2. Текстовое описание задания и требования.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Описание задания и требования:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+1. Тестирование компетенции верстки. Верстка устройств (IPad/IPhone) . Всего 4
+варианта: IPad вертикально, IPad горизонтально, IPhone вертикально, IPhone
+горизонтально. Устройства расположены по центру экрана, если высота экрана
+маленькая, устройство не должно прилипать к верхней границе окна, должен быть
+минимальный отступ. Размеры произвольные, но в рамках допустимых разрешений
+экрана (см. пункт 2).
 
-### `yarn test`
+2. Адаптация устройств происходит при изменении разрешения экрана. IPad
+горизонтально мы видим при разрешении более 1024px. От 768px и до 1024px
+ориентация IPad становится вертикальной. При разрешении менее 768px происходит
+смена IPad на IPhone. Соответственно IPhone горизонтально мы видим при
+разрешении от 568px до 768px и IPhone вертикально от 320px до 568px.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. Экран IPad/IPhone содержит background. Внутри экрана находятся 2 окна с группами кнопок. В
+активном окне в зависимости от ориентации девайса мы видим всего 20 произвольных
+иконок (для горизонтальной ориентации 4 ряда по 5 иконок в каждом, и 5 рядов по 4
+иконки в каждом для вертикальной).
+Смена окон происходит при клике на нужный переключатель, расположенный ниже
+активного окна. Снизу экрана расположено меню на размытом фоне с 4
+произвольными иконками. При клике на иконку в меню должен всплывать попап с этой
+иконкой. Расположение областей можно увидеть в файле "ipad.png".
+![IPad](https://github.com/dkiyatkin/adapt-ipad-iphone-react/blob/master/ipad.png?raw=true)
 
-### `yarn build`
+4. Тестирование компетенции React.  
+Иконки на экране девайсов должны быть перетаскиваемыми. Можно использовать
+сторонние библиотеки;  
+Отображение текущего времени;  
+Приложение должно конфигурироваться из json файла (список приложений);  
+Возможность перемещать иконки на экране и выносить их в отдельный экран;  
+Сохранять позиции и экраны в localStorage в зависимости от текущего типа устройства
+(IPad/IPhone).
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5. Требования к приложению:  
+    * Сборка приложения через webpack с подключением contenthash;
+    * Использовать SCSS для написания стилей;
+    * Server Side Rendering.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## Установка и запуск
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Проект на основе [Create React App](https://create-react-app.dev/). Так как в нем из коробки поддерживаются SCSS, contenthash.  
+После клонирования репозитория нужно сделать `yarn install`.
 
-### `yarn eject`
+Запуск в режиме разработки, просмотр доступен по адресу <http://localhost:3000/>.  
+```sh
+yarn start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Собрать production версию в папку `build`.  
+```sh
+yarn build
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Запустить SSR-сервер, просмотр доступен по адресу <http://localhost:4000/>.  
+```sh
+yarn ssr
+```
