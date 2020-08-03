@@ -1,7 +1,6 @@
-import React, { useEffect, useContext } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
-import RootContext from 'components/RootContext'
 import Screen from 'components/Screen'
 
 import deviceImg from 'images/iphone5-horizontal.png'
@@ -14,25 +13,13 @@ const paddingTop = 20
 const paddingRight = 72
 const paddingBottom = 18
 const paddingLeft = 74
+const device = 'IPhone'
+const orientation = 'landscape'
 
 export default function IPhoneLandscape (props) {
   const { width } = props
   const deviceWidth = width - (marginValue * 2)
   const deviceHeight = deviceImgHeight / (deviceImgWidth / deviceWidth)
-  const screenWidth = deviceWidth - (paddingRight + paddingLeft)
-  const screenHeight = deviceHeight - (paddingTop + paddingBottom)
-  const rootContext = useContext(RootContext)
-  useEffect(() => {
-    rootContext.setDevice('IPhone')
-    rootContext.setOrientation('landscape')
-    rootContext.setWorkspace({
-      ...rootContext.workspace,
-      screenWidth,
-      screenHeight,
-      colMax: 5,
-      rowMax: 4,
-    })
-  }, []) // eslint-disable-line
 
   return (
     <div
@@ -48,7 +35,10 @@ export default function IPhoneLandscape (props) {
         paddingLeft,
       }}
     >
-      {rootContext.device && <Screen />}
+      <Screen
+        device={device}
+        orientation={orientation}
+      />
     </div>
   )
 }

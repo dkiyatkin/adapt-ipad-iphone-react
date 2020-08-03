@@ -17,6 +17,13 @@
     min-width: 0;
   }
 }
+.desktopGrid {
+  &:not(.desktopGridVisible) {
+    .oneDesktop:first-child {
+      display: none;
+    }
+  }
+}
 
 .desktopGrid {
   -ms-overflow-style: none;

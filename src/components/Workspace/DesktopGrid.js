@@ -102,6 +102,7 @@ export default class DesktopGrid extends React.Component {
 
   render () {
     const { desktopGridRef, desktopsCount, desktopItemsCount, items, colMax, rowMax, onStartApp } = this.props
+    const { width, height } = this.state
     const cellStyle = {
       width: (100 / colMax) + '%',
       height: (100 / rowMax) + '%',
@@ -109,7 +110,7 @@ export default class DesktopGrid extends React.Component {
 
     return (
       <div
-        className={cn(styles.desktopGrid, this.props.className)}
+        className={cn(styles.desktopGrid, { [styles.desktopGridVisible]: (width && height) }, this.props.className)}
         ref={desktopGridRef}
       >
         {

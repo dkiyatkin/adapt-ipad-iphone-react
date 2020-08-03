@@ -4,7 +4,6 @@ import cn from 'classnames'
 import compact from 'lodash.compact'
 import isEqual from 'lodash.isequal'
 import uniq from 'lodash.uniq'
-import RootContext from 'components/RootContext'
 import StatusBar from 'components/Workspace/StatusBar'
 import DesktopGrid from 'components/Workspace/DesktopGrid'
 import PageIndicator from 'components/Workspace/PageIndicator'
@@ -17,37 +16,51 @@ import styles from './index.module.scss'
 export default class Workspace extends React.Component {
   static propTypes = {
     className: PropTypes.string,
+    device: PropTypes.string,
+    orientation: PropTypes.string,
   }
 
-  static contextType = RootContext
-
-  constructor (props, context) {
-    super(props, context)
+  constructor (props) {
+    super(props)
     this.desktopGridRef = React.createRef()
     this.state = {
-      dockBarItems: this.getDockBarItems(),
       curDesktopIndex: 0,
       runAppItem: null,
+      ...this.getOrientationValues(),
     }
+    this.state.dockBarItems = this.getDockBarItems()
     this.state.desktopGridItems = this.getDesktopGridItems()
   }
 
   componentDidMount () {
-    this.previousContext = this.context
     this.setDesktop(1, true)
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    if (this.previousContext.orientation !== this.context.orientation) {
+  componentDidUpdate (prevProps) {
+    const { orientation } = this.props
+    if (prevProps.orientation !== orientation) {
       this.setDesktopGridItems(this.getDesktopGridItems())
       this.setDockBarItems(this.getDockBarItems())
+      this.setState(this.getOrientationValues()) // eslint-disable-line react/no-did-update-set-state
     }
-    this.previousContext = this.context
+  }
+
+  getOrientationValues = () => {
+    const { orientation } = this.props
+    let colMax = 5
+    let rowMax = 4
+    if (orientation === 'portrait') {
+      colMax = 4
+      rowMax = 5
+    }
+    const desktopItemsCount = colMax * rowMax
+    return {
+      colMax, rowMax, desktopItemsCount
+    }
   }
 
   trimLeftDesktops = (desktopGridItems, desktopOffset = 0) => {
-    const { colMax, rowMax } = this.context.workspace
-    const desktopItemsCount = colMax * rowMax
+    const { desktopItemsCount } = this.state
     if (!desktopGridItems.slice(0, desktopItemsCount).find(item => !!item)) {
       desktopOffset--
       return this.trimLeftDesktops(desktopGridItems.slice(desktopItemsCount), desktopOffset)
@@ -56,8 +69,7 @@ export default class Workspace extends React.Component {
   }
 
   trimRightDesktops = (desktopGridItems) => {
-    const { colMax, rowMax } = this.context.workspace
-    const desktopItemsCount = colMax * rowMax
+    const { desktopItemsCount } = this.state
     if (!desktopGridItems.slice(-desktopItemsCount).find(item => !!item)) {
       return this.trimRightDesktops(desktopGridItems.slice(0, -desktopItemsCount))
     }
@@ -65,8 +77,7 @@ export default class Workspace extends React.Component {
   }
 
   setEmptyDesktops = (desktopGridItems, selDesktopIndex = 1) => {
-    const { colMax, rowMax } = this.context.workspace
-    const desktopItemsCount = colMax * rowMax
+    const { desktopItemsCount } = this.state
     let [desktopOffset, _desktopGridItems] = this.trimLeftDesktops(desktopGridItems)
     desktopGridItems = this.trimRightDesktops(_desktopGridItems)
     if (desktopGridItems.slice(0, desktopItemsCount).find(item => !!item)) {
@@ -81,10 +92,10 @@ export default class Workspace extends React.Component {
   }
 
   setDesktop = (desktopIndex, isFast = false) => {
+    const { colMax } = this.state
     const desktopGridElement = this.desktopGridRef.current
     if (!desktopGridElement) return
     const width = desktopGridElement.clientWidth
-    const colMax = this.context.workspace.colMax
     const stepX = width / colMax
     desktopGridElement.scrollTo({
       top: 0,
@@ -95,33 +106,36 @@ export default class Workspace extends React.Component {
   }
 
   setDesktopGridItems = (desktopGridItems, selDesktopIndex) => {
+    const { device, orientation } = this.props
     desktopGridItems = this.setEmptyDesktops(desktopGridItems, selDesktopIndex)
-    localStorage.setItem(`${this.context.device}_${this.context.orientation}_desktopGridItems`, JSON.stringify(desktopGridItems))
+    localStorage.setItem(`${device}_${orientation}_desktopGridItems`, JSON.stringify(desktopGridItems))
     this.setState({
       desktopGridItems
     })
   }
 
   getDesktopGridItems = () => {
-    const { colMax, rowMax } = this.context.workspace
-    const deviceDesktopGridItems = JSON.parse(localStorage.getItem(`${this.context.device}_${this.context.orientation}_desktopGridItems`)) || []
+    const { device, orientation } = this.props
+    const { desktopItemsCount } = this.state
+    const deviceDesktopGridItems = JSON.parse(localStorage.getItem(`${device}_${orientation}_desktopGridItems`)) || []
     const configDesktopGridItems = uniq(config.desktopGridIcons)
     if (isEqual(compact(deviceDesktopGridItems).sort(), compact(configDesktopGridItems).sort())) return deviceDesktopGridItems
-    const desktopItemsCount = colMax * rowMax
     const emptyCellsNum = desktopItemsCount - (configDesktopGridItems.length % desktopItemsCount)
     return this.setEmptyDesktops([...configDesktopGridItems, ...Array(emptyCellsNum)])
   }
 
   setDockBarItems = (dockBarItems) => {
-    localStorage.setItem(`${this.context.device}_${this.context.orientation}_dockBarItems`, JSON.stringify(dockBarItems))
+    const { device, orientation } = this.props
+    localStorage.setItem(`${device}_${orientation}_dockBarItems`, JSON.stringify(dockBarItems))
     this.setState({
       dockBarItems
     })
   }
 
   getDockBarItems = () => {
-    const { colMax } = this.context.workspace
-    const deviceDockBarItems = JSON.parse(localStorage.getItem(`${this.context.device}_${this.context.orientation}_dockBarItems`)) || []
+    const { device, orientation } = this.props
+    const { colMax } = this.state
+    const deviceDockBarItems = JSON.parse(localStorage.getItem(`${device}_${orientation}_dockBarItems`)) || []
     const configDockBarItems = uniq(config.dockBarIcons).slice(0, colMax)
     if (isEqual(compact(deviceDockBarItems).sort(), compact(configDockBarItems).sort())) return deviceDockBarItems
     return configDockBarItems
@@ -140,9 +154,7 @@ export default class Workspace extends React.Component {
   }
 
   render () {
-    const { colMax, rowMax } = this.context.workspace
-    const { desktopGridItems, curDesktopIndex, dockBarItems, runAppItem } = this.state
-    const desktopItemsCount = colMax * rowMax
+    const { curDesktopIndex, runAppItem, colMax, rowMax, desktopItemsCount, dockBarItems, desktopGridItems } = this.state
     const desktopsCount = desktopGridItems.length / desktopItemsCount
 
     return (

@@ -1,7 +1,6 @@
-import React, { useEffect, useContext } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import cn from 'classnames'
-import RootContext from 'components/RootContext'
 import Screen from 'components/Screen'
 
 import deviceImg from 'images/ipad-mini-vertical.png'
@@ -14,25 +13,13 @@ const paddingTop = 80
 const paddingRight = 72
 const paddingBottom = 91
 const paddingLeft = 73
+const device = 'IPad'
+const orientation = 'portrait'
 
 export default function IPadPortrait (props) {
   const { width } = props
   const deviceWidth = width - (marginValue * 2)
   const deviceHeight = deviceImgHeight / (deviceImgWidth / deviceWidth)
-  const screenWidth = deviceWidth - (paddingRight + paddingLeft)
-  const screenHeight = deviceHeight - (paddingTop + paddingBottom)
-  const rootContext = useContext(RootContext)
-  useEffect(() => {
-    rootContext.setDevice('IPad')
-    rootContext.setOrientation('portrait')
-    rootContext.setWorkspace({
-      ...rootContext.workspace,
-      screenWidth,
-      screenHeight,
-      colMax: 4,
-      rowMax: 5,
-    })
-  }, []) // eslint-disable-line
 
   return (
     <div
@@ -48,7 +35,10 @@ export default function IPadPortrait (props) {
         paddingLeft,
       }}
     >
-      {rootContext.device && <Screen />}
+      <Screen
+        device={device}
+        orientation={orientation}
+      />
     </div>
   )
 }
