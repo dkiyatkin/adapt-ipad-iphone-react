@@ -15,10 +15,10 @@ export default class RunApp extends React.Component {
   render () {
     const { item, onStopApp } = this.props
     const { itemTitle, iconImg } = getItemValues(item)
+    const otherProps = { onClick: onStopApp }
 
     return (
-      // eslint-disable-next-line
-      <div className={cn(styles.runApp, this.props.className)} onClick={onStopApp}>
+      <div className={cn(styles.runApp, this.props.className)} {...otherProps}>
         <div className={styles.titleWrap}>
           {itemTitle}
         </div>
