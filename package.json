@@ -20,6 +20,9 @@
     "react-responsive": "^8.1.0",
     "react-scripts": "3.4.1"
   },
+  "engines": {
+    "node": "=14"
+  },
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
