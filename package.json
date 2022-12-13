@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "bootstrap": "^4.5.0",
     "classnames": "^2.2.6",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "jsdom": "^16.3.0",
     "lodash.compact": "^3.0.1",
     "lodash.debounce": "^4.0.8",
